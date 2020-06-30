@@ -16,19 +16,19 @@
       <div class="row">
         <div class="col-6 coffee-list">
           <div class="row flex-column justify-content-around">
-            <div class="coffee-item" onclick="cookCoffee(50, 'Американо')">
+            <div class="coffee-item" onclick="cookCoffee(50, 'Американо', this)">
               <img src="img/americano.png" alt="Американо">
               <span>Американо - 50 руб.</span>
             </div>
-            <div class="coffee-item" onclick="cookCoffee(92, 'Капучино')">
+            <div class="coffee-item" onclick="cookCoffee(92, 'Капучино', this)">
               <img src="img/cappuccino.png" alt="Капучино">
               <span>Капучино - 92 руб.</span>
             </div>
-            <div class="coffee-item" onclick="cookCoffee(66, 'Эспрессо')">
+            <div class="coffee-item" onclick="cookCoffee(66, 'Эспрессо', this)">
               <img src="img/espresso.png" alt="Эспрессо">
               <span>Эспрессо - 66 руб.</span>
             </div>
-            <div class="coffee-item" onclick="cookCoffee(128, 'Латте')">
+            <div class="coffee-item" onclick="cookCoffee(128, 'Латте', this)">
               <img src="img/latte.jpg" alt="Латте">
               <span>Латте - 128 руб.</span>
             </div>
@@ -38,7 +38,7 @@
           <div class="row">
             <div class="col-6"><!--дисплей и кружка-->
               <div class="display">
-                <span class="display-text">Выберите кофе</span>
+                <span class="display-text">Выберите кофе!</span>
                 <div class="progress mt-2">
                   <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                 </div>
@@ -63,6 +63,11 @@
           </div>
         </div><!--правая сторона (операционная)-->
       </div>
+    </div>
+    <div class="money">
+      <img src="img/100rub.jpg" alt="100rub">
+      <img src="img/500rub.jpg" alt="500">
+      <img src="img/50rub.jpg" alt="50">
     </div>
 
     <!-- Optional JavaScript -->
