@@ -101,3 +101,74 @@ function changeDisplayText(text) {
     displayText.innerHTML = text;
   }
 }
+
+//-----Drag'n'Drop с купюрами-----
+
+let bills = document.querySelectorAll(".money img");
+
+for (let bill of bills) {
+  bill.onmousedown = dragMoney;
+}
+
+function dragMoney(event) {//Все слушатели события возвращают в функцию первым параметром объект event
+  console.log(event);//Получаем объект события
+  console.log( [event.clientX, event.clientY] );//координаты мыши
+  console.log( this.getBoundingClientRect() );//Получаем координаты элемента
+  event.preventDefault();//остановить стандартные события(призрак картинки при зажатии убрать)
+  let bill = this;
+  let billCoords = bill.getBoundingClientRect();
+  let billWidth = billCoords.width;
+  let billHeight = billCoords.height;
+  bill.style.position = "absolute";
+  bill.style.transform = "rotate(90deg)";
+  bill.style.top = event.clientY - billHeight/2 + "px";
+  bill.style.left = event.clientX - billWidth/2 + "px";
+  
+  window.onmousemove = function(event) {
+    /*let billCoords = bill.getBoundingClientRect();
+    let billWidth = billCoords.width;
+    let billHeight = billCoords.height;*/
+    bill.style.top = event.clientY - billHeight/2 + "px";
+    bill.style.left = event.clientX - billWidth/2 + "px";
+  }
+  
+  bill.onmouseup = function() {
+    console.log( inAtm(bill) );
+    window.onmousemove = null;
+    bill.style.transform = "rotate(0deg)";
+  }
+}
+
+function inAtm(bill) {
+  console.log(bill);
+  let atm = document.querySelector(".atm img");
+  let atmCoords = atm.getBoundingClientRect();
+  let atmWidth = atmCoords.width;
+  let atmHeight = atmCoords.height;
+  
+  let billCoords = bill.getBoundingClientRect();
+  let billHeight = billCoords.height;
+  let billWidth = billCoords.width;
+  
+  let atmLeftX = atmCoords.x;
+  let atmTopY = atmCoords.y;
+  let atmRightX = atmLeftX + atmWidth;
+  let atmBottomY = atmTopY + atmHeight/3;
+  
+  let billLeftX = billCoords.x;
+  let billRightX = billCoords.x + billWidth;
+  let billY = billCoords.y;
+  
+  console.log([atmLeftX, atmTopY, atmRightX, atmBottomY]);
+  console.log([billLeftX, billRightX, billY]);
+  
+  if (billLeftX > atmLeftX
+    && billRightX < atmRightX
+    && billY > atmTopY
+    && billY < atmBottomY) {
+      return true;
+    } else {
+      return false;
+    }
+}
+

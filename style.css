@@ -53,4 +53,5 @@
 }
 .money img {
   width: 20%;
+  transition: transform 200ms ease-in-out;
 }
