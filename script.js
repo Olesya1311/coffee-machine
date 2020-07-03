@@ -133,10 +133,27 @@ function dragMoney(event) {//Все слушатели события возвр
   }
   
   bill.onmouseup = function() {
-    console.log( inAtm(bill) );
     window.onmousemove = null;
-    bill.style.transform = "rotate(0deg)";
+    if ( inAtm(bill) ) {
+      let cost = +bill.getAttribute("cost");//Получаем собственный атрибут cost
+      balance.value = +balance.value + cost;//Прибавляем к балансу
+      //bill.remove();//удаляем купюру
+      eatBill(bill);
+    } else {
+      bill.style.transform = "rotate(0deg)";
+    }
   }
+}
+
+function eatBill(bill) {
+  let cashCatcher = document.querySelector(".cash-catcher");
+  cashCatcher.append(bill);
+  bill.style.position = "";
+  bill.style.transition = "transform 3s";
+  bill.style.transform = "translateY(50%) rotate(90deg)";
+  setTimeout(function() {
+    bill.style.transform = "translateY(-200%) rotate(90deg)";
+  }, 10);
 }
 
 function inAtm(bill) {
@@ -170,5 +187,103 @@ function inAtm(bill) {
     } else {
       return false;
     }
+}
+
+
+//Получение сдачи
+let changeBtn = document.querySelector(".change-btn");
+changeBtn.onclick = function() {
+  takeChange();
+};
+
+function takeChange() {
+  if (balance.value >= 10) {
+    balance.value -= 10;
+    createCoin("10");
+    setTimeout(function() {
+      takeChange();
+    }, 300); //рекурсивная функция- функция, вызывающая саму себя
+  } else if (balance.value >= 5) {
+    balance.value -= 5;
+    createCoin("5");
+    setTimeout(function() {
+      takeChange();
+    }, 300);
+  } else if (balance.value >= 2) {
+    balance.value -= 2;
+    createCoin("2");
+    setTimeout(function() {
+      takeChange();
+    }, 300);
+  } else if (balance.value >= 1) {
+    balance.value -= 1;
+    createCoin("1");
+    setTimeout(function() {
+      takeChange();
+    }, 300);
+  }
+}
+
+function createCoin(nominal) {//"1","2","5","10"
+  let imageSrc = "";
+  switch (nominal) {
+    case "1": 
+      imageSrc = "img/1rub.png";
+      break;
+      case "2": 
+      imageSrc = "img/2rub.png";
+      break;
+      case "5": 
+      imageSrc = "img/5rub.png";
+      break;
+      case "10": 
+      imageSrc = "img/10rub.png";
+      break;
+  }
+  let changeBox = document.querySelector(".change-box");
+  let changeBoxCoords = changeBox.getBoundingClientRect();
+  let changeBoxWidth = changeBoxCoords.width;
+  let changeBoxHeight = changeBoxCoords.height;
+  console.log([changeBoxWidth, changeBoxHeight]);
+ // changeBox.innerHTML += `<img src="${imageSrc}" style="width: 50px">`
+  let coin = document.createElement("img");//создает элемент "в вакууме", обязательно строка 204 для добавления его в нужное место 
+  coin.src = imageSrc;
+  coin.style.cursor = "pointer";
+  coin.style.userSelect = "none";
+  coin.style.width = "30px";
+  coin.style.position = "absolute";
+  coin.style.opacity = 0;
+  coin.style.transform = "translateY(-75%)";
+  coin.style.transition = "opacity .5s, transform .5s";
+  coin.style.top = getRandomInt(0, changeBoxHeight - 30) + "px";
+  coin.style.left = getRandomInt(0, changeBoxWidth - 30) + "px";
+  
+  setTimeout(function() {
+    coin.style.opacity = 1;
+    coin.style.transform = "translateY(0%)";
+  }, 10);
+  
+  changeBox.append(coin);
+  coin.onclick = function() {
+    coin.remove();
+  };
+  
+  let coinDropSound = new Audio("sound/coinDrop.mp3"); //Создаем объект Аудио
+  coinDropSound.volume = 0.1; //уменьшает громкость звука
+  coinDropSound.play(); //проигрывание аудио
+  //coinDropSound.pause();-приостановить проигрывание
+  //coinDropSound.currentTime = 0 - перемотать в начало
+  
+  //node.append(...nodes or strings) – добавляет узлы или строки в конец node,
+  //node.prepend(...nodes or strings) – вставляет узлы или строки в начало node,
+  //node.before(...nodes or strings) –- вставляет узлы или строки до node,
+  //node.after(...nodes or strings) –- вставляет узлы или строки после node,
+  //node.replaceWith(...nodes or strings) –- заменяет node заданными узлами или строками.
+  
+}
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
 }
 
